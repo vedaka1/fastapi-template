@@ -3,12 +3,13 @@ from uuid import UUID
 from sqlalchemy import delete, func, insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.application.common.enums import Sort
-from src.application.common.filters.build import build_filters
 from src.application.user.filters import UserFilters
 from src.application.user.repository import IUserRepository
 from src.domain.user.entity import User
+from src.infrastructure.db.postgresql.common.filters.build import build_filters
 from src.infrastructure.db.postgresql.common.utils import apply_offset_and_limit, build_order_by
 from src.infrastructure.db.postgresql.models.user import UserModel
+from src.infrastructure.db.postgresql.user.filters import UserFiltersImpl
 from src.infrastructure.db.postgresql.user.mapper import map_model_to_user
 
 
@@ -45,7 +46,7 @@ class UserRepository(IUserRepository):
         offset: int | None = None,
         limit: int | None = 100,
     ) -> list[User]:
-        filters_list = build_filters(filters, UserModel)
+        filters_list = build_filters(filters=filters, filters_impl=UserFiltersImpl, model=UserModel)
         query = select(UserModel).where(*filters_list)
 
         if order_by:
@@ -57,7 +58,7 @@ class UserRepository(IUserRepository):
         return [map_model_to_user(entity) for entity in entities]
 
     async def count(self, filters: UserFilters | None = None) -> int:
-        filters_list = build_filters(filters, UserModel)
+        filters_list = build_filters(filters=filters, filters_impl=UserFiltersImpl, model=UserModel)
         query = select(func.count()).select_from(UserModel).where(*filters_list)
         cursor = await self.session.execute(query)
         count = cursor.scalar_one()

@@ -5,8 +5,7 @@ from src.application.user.repository import IUserRepository
 from src.infrastructure.db.postgresql.database import get_async_engine, get_async_session, get_async_sessionmaker
 from src.infrastructure.di.database import get_commiter
 from src.infrastructure.di.repository import get_user_repository
-
-from app.src.infrastructure.di.usecases.user import init_user_usecases
+from src.infrastructure.di.usecases.user import init_user_usecases
 
 
 def init_db(app: FastAPI) -> None:

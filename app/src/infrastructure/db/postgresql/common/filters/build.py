@@ -1,11 +1,13 @@
 from typing import Any
 
 from src.application.common.filters.base import BaseFilters
+from src.infrastructure.db.postgresql.common.filters.base import BaseFiltersImpl
 from src.infrastructure.db.postgresql.models.base import Base
 
 
 def build_filters(
     filters: BaseFilters | None,
+    filters_impl: type[BaseFiltersImpl],
     model: type[Base],
     exclude_fields: set[str] | None = None,
     only_fields: list[str] | None = None,
@@ -13,9 +15,10 @@ def build_filters(
     """
     Args:
         filters: класс фильтров BaseFilters | None
+        filters_impl: тип фильтра, имплиментирующего фильтры из BaseFilters
         model: модель для фильтров или ее алиас
-        exclude_fields: список полей, которые не должны быть в фильтре
-        only_fields: список полей, для получения только определенных фильтров
+        exclude_fields: ключи для исключения из списка фильтров
+        only_fields: список ключей для получения только определенных фильтров
     Returns:
         список фильтров алхимии
     """
@@ -23,17 +26,16 @@ def build_filters(
     if not filters:
         return []
 
-    filters_map = filters.get_map(model)
-
-    return build_filters_list(
+    return _build_filters_list(
         filters_dict=filters.__dict__,
-        filters_map=filters_map,
+        filters_map=filters_impl(model).__dict__,
         exclude_fields=exclude_fields,
         only_fields=only_fields,
+        additional_filters=filters_impl.get_additional_filters(),
     )
 
 
-def build_filters_list(
+def _build_filters_list(
     filters_dict: dict[str, Any],
     filters_map: dict[str, Any],
     exclude_fields: set[str] | None = None,
@@ -42,8 +44,8 @@ def build_filters_list(
 ) -> list[Any]:
     """
     Args:
-        filters_dict: словарь фильтров из класса
-        filters_map: словарь с ключами из filters_dict и lambda функциями в качестве значения для получения фильтра алхимии
+        filters_dict: словарь фильтров из класса BaseFilters
+        filters_map: словарь фильтров из класса BaseFiltersImpl
         exclude_fields: ключи для исключения из списка фильтров
         only_fields: список ключей для получения только определенных фильтров
         additional_filters: список дополнительных фильтров
