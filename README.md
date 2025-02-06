@@ -15,4 +15,4 @@ Run `docker compose up -d --build` or `make dev`
 
 ### What's next?
 
-Now you can check API docs at the address `http://localhost:8000/docs` 
+Now you can check API docs at the address `http://localhost:8000/api/v1/docs` 
