@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from sqlalchemy.orm import Mapped, mapped_column
-from src.infrastructure.db.postgresql.models.base import Base
+from src.infrastructure.db.postgresql.common.models.base import Base
 
 
 class UserModel(Base):

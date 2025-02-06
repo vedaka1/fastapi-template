@@ -2,7 +2,7 @@ from typing import Any
 
 from src.application.common.filters.base import BaseFilters
 from src.infrastructure.db.postgresql.common.filters.base import BaseFiltersImpl
-from src.infrastructure.db.postgresql.models.base import Base
+from src.infrastructure.db.postgresql.common.models.base import Base
 
 
 def build_filters(

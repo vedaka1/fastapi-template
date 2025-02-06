@@ -2,7 +2,7 @@ from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
-from src.infrastructure.db.postgresql.models import *  # noqa
+from src.infrastructure.db.postgresql.models import *
 from config import PostgresqlConfig
 
 # this is the Alembic Config object, which provides

@@ -8,9 +8,9 @@ from src.application.user.repository import IUserRepository
 from src.domain.user.entity import User
 from src.infrastructure.db.postgresql.common.filters.build import build_filters
 from src.infrastructure.db.postgresql.common.utils import apply_offset_and_limit, build_order_by
-from src.infrastructure.db.postgresql.models.user import UserModel
 from src.infrastructure.db.postgresql.user.filters import UserFiltersImpl
 from src.infrastructure.db.postgresql.user.mapper import map_model_to_user
+from src.infrastructure.db.postgresql.user.model import UserModel
 
 
 class UserRepository(IUserRepository):

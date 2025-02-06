@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from src.infrastructure.db.postgresql.models.base import Base
+from src.infrastructure.db.postgresql.common.models.base import Base
 
 
 class BaseFiltersImpl(ABC):

@@ -1,5 +1,5 @@
 from src.domain.user.entity import User
-from src.infrastructure.db.postgresql.models.user import UserModel
+from src.infrastructure.db.postgresql.user.model import UserModel
 
 
 def map_model_to_user(model: UserModel) -> User:

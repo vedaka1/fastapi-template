@@ -1,7 +1,7 @@
 from sqlalchemy import func
 from src.infrastructure.db.postgresql.common.filters.base import BaseFiltersImpl
 from src.infrastructure.db.postgresql.common.filters.utils import create_search_string
-from src.infrastructure.db.postgresql.models.user import UserModel
+from src.infrastructure.db.postgresql.user.model import UserModel
 
 
 class UserFiltersImpl(BaseFiltersImpl):
