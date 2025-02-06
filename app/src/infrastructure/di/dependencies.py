@@ -2,12 +2,11 @@ from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 from src.application.common.interfaces.commiter import ICommiter
 from src.application.user.repository import IUserRepository
-from src.application.user.usecases.create_user import CreateUserUseCase
-from src.application.user.usecases.get_users import GetUsersUseCase
 from src.infrastructure.db.postgresql.database import get_async_engine, get_async_session, get_async_sessionmaker
-from src.infrastructure.di.common import get_commiter
+from src.infrastructure.di.database import get_commiter
 from src.infrastructure.di.repository import get_user_repository
-from src.infrastructure.di.usecase import create_user_usecase, get_users_usecase
+
+from app.src.infrastructure.di.usecases.user import init_user_usecases
 
 
 def init_db(app: FastAPI) -> None:
@@ -22,8 +21,7 @@ def init_repositories(app: FastAPI) -> None:
 
 
 def init_usecases(app: FastAPI) -> None:
-    app.dependency_overrides[CreateUserUseCase] = create_user_usecase
-    app.dependency_overrides[GetUsersUseCase] = get_users_usecase
+    init_user_usecases(app)
 
 
 def init_dependencies(app: FastAPI) -> None:
