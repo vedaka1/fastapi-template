@@ -1,6 +1,6 @@
 ## How to run
 
-Set variables in `.env` like in `.env.example':
+Set variables in `.env` like in `.env.example`:
 
 ```python
 POSTGRES_HOST=postgres
@@ -11,7 +11,7 @@ POSTGRES_DB=test
 ```
 ### Development
 
-Run `docker compose up -d --build`
+Run `docker compose up -d --build` or `make dev`
 
 ### What's next?
 

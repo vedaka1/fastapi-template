@@ -12,13 +12,7 @@ from src.presentation.pagination import PaginationQuery
 router = APIRouter(tags=['Users'], prefix='/users')
 
 
-@router.post(
-    '',
-    responses={
-        200: {'model': None},
-        409: {'model': UserAlrearedyExistException},
-    },
-)
+@router.post('', summary='Create user', responses={200: {'model': None}, 409: {'model': UserAlrearedyExistException}})
 async def create_user(
     create_user_usecase: Annotated[CreateUserUseCase, Depends(Stub(CreateUserUseCase))],
     input: CreateUserInput = Depends(),
@@ -27,7 +21,7 @@ async def create_user(
     return data
 
 
-@router.get('')
+@router.get('', summary='Get users', responses={200: {'model': GetUsersOutput}})
 async def get_users(
     get_users_usecase: Annotated[GetUsersUseCase, Depends(Stub(GetUsersUseCase))],
     user_filters: UserFilters = Depends(),
