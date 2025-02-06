@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+
+  api:
+    depends_on:
+      postgres: 
+        condition: service_healthy
+    build: 
+      context: ./
+      dockerfile: ./.ci/Dockerfile
+    ports:
+     - 8000:8000
+    volumes:
+      - ./app/src:/app/src
+      - ./app/main.py:/app/main.py
+    env_file:
+      - .env
+    networks:
+      - internal
+      - default
+  
+  postgres:
+    image: postgres:16-bookworm
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 10s
+
+    
+volumes:
+  postgres_data:
+
+networks:
+  internal:
+    driver: bridge
+    internal: true
+  default:
+    driver: bridge
