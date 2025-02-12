@@ -9,7 +9,7 @@ prod:
 	$(DC) -f $(PROD) up -d --build
 
 down:
-	$(DC) -f $(DEV) -f $(PROD) down
+	$(DC) -f $(DEV) down
 
 logs:
 	$(DC) -f $(DEV) -f $(PROD) logs | tail -50

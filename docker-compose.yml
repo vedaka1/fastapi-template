@@ -28,6 +28,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     networks:
       - internal
+      - default
     ports:
       - 5432:5432
     healthcheck:
