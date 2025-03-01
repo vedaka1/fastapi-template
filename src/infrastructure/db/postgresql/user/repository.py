@@ -2,6 +2,7 @@ from uuid import UUID
 
 from sqlalchemy import delete, func, insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.application.common.enums import Sort
 from src.application.user.filters import UserFilters
 from src.application.user.repository import IUserRepository

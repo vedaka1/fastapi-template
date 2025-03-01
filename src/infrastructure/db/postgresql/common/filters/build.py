@@ -1,17 +1,22 @@
-from typing import Any
+from collections.abc import Callable, Generator, Iterable
+from typing import Any, TypeVar
+
+from sqlalchemy import BinaryExpression
 
 from src.application.common.filters.base import BaseFilters
 from src.infrastructure.db.postgresql.common.filters.base import BaseFiltersImpl
 from src.infrastructure.db.postgresql.common.models.base import Base
 
+TModel = TypeVar('TModel', bound=Base)
+
 
 def build_filters(
     filters: BaseFilters | None,
-    filters_impl: type[BaseFiltersImpl],
-    model: type[Base],
+    filters_impl: type[BaseFiltersImpl[TModel]],
+    model: type[TModel],
     exclude_fields: set[str] | None = None,
     only_fields: list[str] | None = None,
-) -> list[Any]:
+) -> list[BinaryExpression[Any]]:
     """
     Args:
         filters: класс фильтров BaseFilters | None
@@ -37,11 +42,11 @@ def build_filters(
 
 def _build_filters_list(
     filters_dict: dict[str, Any],
-    filters_map: dict[str, Any],
+    filters_map: dict[str, Callable[[Any], BinaryExpression[Any]]],
     exclude_fields: set[str] | None = None,
     only_fields: list[str] | None = None,
-    additional_filters: list[Any] | None = None,
-) -> list[Any]:
+    additional_filters: list[BinaryExpression[Any]] | None = None,
+) -> list[BinaryExpression[Any]]:
     """
     Args:
         filters_dict: словарь фильтров из класса BaseFilters
@@ -50,17 +55,18 @@ def _build_filters_list(
         only_fields: список ключей для получения только определенных фильтров
         additional_filters: список дополнительных фильтров
     Returns:
-        список фильтров list[Any]
+        список фильтров
     """
     exclude_fields = exclude_fields or set()
-    filters_list = []
     keys = only_fields or filters_dict.keys()
 
-    for key in keys:
-        value = filters_dict.get(key)
-        if key not in exclude_fields and key in filters_map and (isinstance(value, bool) or value):
-            filters_list.append(filters_map[key](value))
+    def filter_gen(keys: Iterable[str]) -> Generator[BinaryExpression[Any]]:
+        for key in keys:
+            value = filters_dict.get(key)
+            if key not in exclude_fields and key in filters_map and (isinstance(value, bool) or value):
+                yield filters_map[key](value)
 
+    filters_list = [filter for filter in filter_gen(keys)]
     if additional_filters:
         filters_list.extend(additional_filters)
 

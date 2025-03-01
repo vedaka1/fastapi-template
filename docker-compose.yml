@@ -12,8 +12,8 @@ services:
     ports:
      - 8000:8000
     volumes:
-      - ./app/src:/app/src
-      - ./app/main.py:/app/main.py
+      - ./src:/app/src
+      - ./main.py:/app/main.py
     env_file:
       - .env.production
     networks:

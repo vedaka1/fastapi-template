@@ -10,8 +10,8 @@ COPY poetry.lock pyproject.toml ./
 
 RUN poetry install --without test --no-root --no-interaction --no-ansi
 
-COPY app/ .
-COPY .env .
+COPY src/ ./src
+COPY .env main.py config.py alembic.ini ./
 COPY ./.ci/entrypoint.sh /app/.ci/entrypoint.sh
 
 RUN chmod +x /app/.ci/entrypoint.sh
