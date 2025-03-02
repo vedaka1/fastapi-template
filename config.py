@@ -1,5 +1,6 @@
-import os
 from dataclasses import dataclass
+
+from src.main.helpers import get_env_var
 
 
 @dataclass
@@ -23,11 +24,11 @@ class PostgresqlConfig:
     @staticmethod
     def load_from_env() -> 'PostgresqlConfig':
         return PostgresqlConfig(
-            str(os.getenv('POSTGRES_HOST', 'postgres')),
-            int(os.getenv('POSTGRES_PORT', 5432)),
-            str(os.getenv('POSTGRES_USER')),
-            str(os.getenv('POSTGRES_PASSWORD')),
-            str(os.getenv('POSTGRES_DB')),
+            get_env_var('POSTGRES_HOST', str, default='postgres'),
+            get_env_var('POSTGRES_PORT', int, default=5432),
+            get_env_var('POSTGRES_USER', str),
+            get_env_var('POSTGRES_PASSWORD', str),
+            get_env_var('POSTGRES_DB', str),
         )
 
 
