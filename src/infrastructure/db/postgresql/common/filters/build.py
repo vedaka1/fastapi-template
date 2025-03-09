@@ -33,7 +33,7 @@ def build_filters(
 
     return _build_filters_list(
         filters_dict=filters.__dict__,
-        filters_map=filters_impl(model).__dict__,
+        filters_impl_dict=filters_impl(model).__dict__,
         exclude_fields=exclude_fields,
         only_fields=only_fields,
         additional_filters=filters_impl.get_additional_filters(),
@@ -42,7 +42,7 @@ def build_filters(
 
 def _build_filters_list(
     filters_dict: dict[str, Any],
-    filters_map: dict[str, Callable[[Any], BinaryExpression[Any]]],
+    filters_impl_dict: dict[str, Callable[[Any], BinaryExpression[Any]]],
     exclude_fields: set[str] | None = None,
     only_fields: list[str] | None = None,
     additional_filters: list[BinaryExpression[Any]] | None = None,
@@ -58,16 +58,32 @@ def _build_filters_list(
         список фильтров
     """
     exclude_fields = exclude_fields or set()
-    keys = only_fields or filters_dict.keys()
 
-    def filter_gen(keys: Iterable[str]) -> Generator[BinaryExpression[Any]]:
-        for key in keys:
-            value = filters_dict.get(key)
-            if key not in exclude_fields and key in filters_map and (isinstance(value, bool) or value):
-                yield filters_map[key](value)
+    keys = only_fields or _key_gen(filters_dict.keys(), exclude_fields, filters_impl_dict)
+    filters_list = [filter for filter in _filter_gen(keys, filters_dict, filters_impl_dict)]
 
-    filters_list = [filter for filter in filter_gen(keys)]
     if additional_filters:
         filters_list.extend(additional_filters)
 
     return filters_list
+
+
+def _key_gen(
+    keys: Iterable[str],
+    exclude_fields: set[str],
+    filters_impl_dict: dict[str, Callable[[Any], BinaryExpression[Any]]],
+) -> Generator[str]:
+    for key in keys:
+        if key not in exclude_fields and key in filters_impl_dict:
+            yield key
+
+
+def _filter_gen(
+    keys: list[str] | Generator[str],
+    filters_dict: dict[str, Any],
+    filters_impl_dict: dict[str, Callable[[Any], BinaryExpression[Any]]],
+) -> Generator[BinaryExpression[Any]]:
+    for key in keys:
+        value = filters_dict.get(key)
+        if type(value) is bool or value:
+            yield filters_impl_dict[key](value)

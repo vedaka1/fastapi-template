@@ -76,7 +76,7 @@ def test_build_filters_list(
 ) -> None:
     result = _build_filters_list(
         filters_dict=filters_dict,
-        filters_map=filters_map,
+        filters_impl_dict=filters_map,
         exclude_fields=exclude_fields,
         only_fields=only_fields,
         additional_filters=additional_filters,
