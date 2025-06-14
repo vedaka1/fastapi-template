@@ -8,7 +8,8 @@ from src.application.user.usecases.create import CreateUserUseCase
 from src.application.user.usecases.get import GetUsersUseCase
 from src.domain.user.exceptions import UserAlrearedyExistException
 from src.infrastructure.di.stub import Stub
-from src.presentation.pagination import OrderByQuery, PaginationQuery
+from src.presentation.order_by import create_order_by_from_query
+from src.presentation.pagination import PaginationQuery
 
 router = APIRouter(tags=['Users'], prefix='/users')
 
@@ -26,12 +27,12 @@ async def create_user(
 async def get_users(
     interactor: Annotated[GetUsersUseCase, Depends(Stub(GetUsersUseCase))],
     user_filters: UserFilters = Depends(),
-    order_by: OrderByQuery = Depends(),
     pagination: PaginationQuery = Depends(),
+    order_by: str | None = None,
 ) -> GetUsersOutput:
     data = await interactor.execute(
         user_filters,
-        order_by.order_by,
+        create_order_by_from_query(order_by),
         pagination.offset,
         pagination.limit,
     )
