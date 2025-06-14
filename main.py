@@ -7,13 +7,8 @@ from src.presentation.v1.router import api_router as api_router_v1
 
 def create_app() -> FastAPI:
     app = FastAPI()
-
-    api_v1 = FastAPI()
-    api_v1.include_router(api_router_v1)
-
-    init_dependencies(api_v1)
-    init_exc_handlers(api_v1)
-
-    app.mount('/api/v1', api_v1)
+    app.include_router(api_router_v1, prefix='/api/v1')
+    init_dependencies(app)
+    init_exc_handlers(app)
 
     return app

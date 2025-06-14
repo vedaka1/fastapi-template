@@ -5,7 +5,7 @@ from typing import Any, TypeVar
 _TRUE_VALUES = ('true', '1', 'yes')
 _FALSE_VALUES = ('false', '0', 'no')
 _BOOL_VALUES = _TRUE_VALUES + _FALSE_VALUES
-_DEFAULT_VALUE = '_DEFAULT'  # для возможности указать None в качестве значения по умолчанию
+_DEFAULT_VALUE: Any = object()  # для возможности указать None в качестве значения по умолчанию
 T = TypeVar('T', bound=Any)
 
 
@@ -37,7 +37,7 @@ def get_env_var(key: str, cast_to: Callable[[Any], T], default: T = _DEFAULT_VAL
     """
     value = os.environ.get(key)
     if value in ('', None):  # не задана в окружении
-        if default == _DEFAULT_VALUE:
+        if default is _DEFAULT_VALUE:
             raise ValueError(f'Environment variable {key} is not specified')
         return default
     return _cast_to(value, cast_to)

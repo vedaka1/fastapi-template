@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from src.application.common.enums import Sort
+
 
 @dataclass
 class PaginationQuery:
@@ -9,3 +11,8 @@ class PaginationQuery:
     @property
     def offset(self):
         return self.page * self.limit
+
+
+@dataclass
+class OrderByQuery:
+    order_by: dict[str, Sort]

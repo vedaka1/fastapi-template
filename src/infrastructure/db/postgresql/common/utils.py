@@ -3,15 +3,15 @@ from typing import Any, TypeVar
 from sqlalchemy import desc
 
 from src.application.common.enums import Sort
+from src.application.common.types import OrderBy
 
 T = TypeVar('T', bound=Any)
 
 
-def build_order_by(order_by: dict[str, Sort], model: Any) -> list[Any]:
+def build_order_by(order_by: OrderBy, model: Any) -> list[Any]:
     order_by_list = []
     for field, order in order_by.items():
-        model_field = getattr(model, field, None)
-        if model_field:
+        if model_field := getattr(model, field, None):
             order_by_list.append(desc(model_field) if order == Sort.desc else model_field)
     return order_by_list
 

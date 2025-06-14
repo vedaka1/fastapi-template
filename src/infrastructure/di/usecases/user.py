@@ -1,10 +1,11 @@
 from typing import Annotated
 
 from fastapi import Depends, FastAPI
+
 from src.application.common.interfaces.commiter import ICommiter
 from src.application.user.repository import IUserRepository
-from src.application.user.usecases.create_user import CreateUserUseCase
-from src.application.user.usecases.get_users import GetUsersUseCase
+from src.application.user.usecases.create import CreateUserUseCase
+from src.application.user.usecases.get import GetUsersUseCase
 from src.infrastructure.di.stub import Stub
 
 

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
 
-from src.application.common.enums import Sort
+from src.application.common.types import OrderBy
 from src.application.user.filters import UserFilters
 from src.domain.user.entity import User
 
@@ -23,7 +23,7 @@ class IUserRepository(ABC):
     async def get_many(
         self,
         filters: UserFilters | None = None,
-        order_by: dict[str, Sort] | None = None,
+        order_by: OrderBy | None = None,
         offset: int | None = None,
         limit: int | None = 100,
     ) -> list[User]: ...

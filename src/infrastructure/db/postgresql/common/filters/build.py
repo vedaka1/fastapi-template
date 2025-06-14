@@ -36,7 +36,6 @@ def build_filters(
         filters_impl_dict=filters_impl(model).__dict__,
         exclude_fields=exclude_fields,
         only_fields=only_fields,
-        additional_filters=filters_impl.get_additional_filters(),
     )
 
 
@@ -45,7 +44,6 @@ def _build_filters_list(
     filters_impl_dict: dict[str, Callable[[Any], BinaryExpression[Any]]],
     exclude_fields: set[str] | None = None,
     only_fields: list[str] | None = None,
-    additional_filters: list[BinaryExpression[Any]] | None = None,
 ) -> list[BinaryExpression[Any]]:
     """
     Args:
@@ -61,9 +59,6 @@ def _build_filters_list(
 
     keys = only_fields or _key_gen(filters_dict.keys(), exclude_fields, filters_impl_dict)
     filters_list = [filter for filter in _filter_gen(keys, filters_dict, filters_impl_dict)]
-
-    if additional_filters:
-        filters_list.extend(additional_filters)
 
     return filters_list
 

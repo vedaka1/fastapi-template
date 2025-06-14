@@ -13,3 +13,4 @@ class UserFiltersImpl(BaseFiltersImpl[UserModel]):
         self.first_name = lambda v: model.first_name == v
         self.last_name = lambda v: model.last_name == v
         self.middle_name = lambda v: model.middle_name == v
+        self.uuid_in = lambda v: model.uuid.in_(v)

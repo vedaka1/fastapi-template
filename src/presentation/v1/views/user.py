@@ -1,31 +1,38 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
+
 from src.application.user.dto import CreateUserInput, GetUsersOutput
 from src.application.user.filters import UserFilters
-from src.application.user.usecases.create_user import CreateUserUseCase
-from src.application.user.usecases.get_users import GetUsersUseCase
+from src.application.user.usecases.create import CreateUserUseCase
+from src.application.user.usecases.get import GetUsersUseCase
 from src.domain.user.exceptions import UserAlrearedyExistException
 from src.infrastructure.di.stub import Stub
-from src.presentation.pagination import PaginationQuery
+from src.presentation.pagination import OrderByQuery, PaginationQuery
 
 router = APIRouter(tags=['Users'], prefix='/users')
 
 
 @router.post('', summary='Create user', responses={200: {'model': None}, 409: {'model': UserAlrearedyExistException}})
 async def create_user(
-    create_user_usecase: Annotated[CreateUserUseCase, Depends(Stub(CreateUserUseCase))],
+    interactor: Annotated[CreateUserUseCase, Depends(Stub(CreateUserUseCase))],
     input: CreateUserInput = Depends(),
 ) -> None:
-    data = await create_user_usecase.execute(input)
+    data = await interactor.execute(input)
     return data
 
 
 @router.get('', summary='Get users', responses={200: {'model': GetUsersOutput}})
 async def get_users(
-    get_users_usecase: Annotated[GetUsersUseCase, Depends(Stub(GetUsersUseCase))],
+    interactor: Annotated[GetUsersUseCase, Depends(Stub(GetUsersUseCase))],
     user_filters: UserFilters = Depends(),
+    order_by: OrderByQuery = Depends(),
     pagination: PaginationQuery = Depends(),
 ) -> GetUsersOutput:
-    data = await get_users_usecase.execute(user_filters, pagination.offset, pagination.limit)
+    data = await interactor.execute(
+        user_filters,
+        order_by.order_by,
+        pagination.offset,
+        pagination.limit,
+    )
     return data
