@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class PaginationQuery:
+class PaginationRequest:
     page: int = 0
     limit: int = 100
 
