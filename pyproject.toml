@@ -49,6 +49,7 @@ exclude = [
     ".vscode",
     "venv",
     "alembic",
+    "migrations",
 ]
 line-length = 120
 target-version = "py312"
@@ -66,6 +67,7 @@ inline-quotes = "single"
 [tool.mypy]
 pretty = true
 files = 'src/'
+exclude = "migrations"
 disable_error_code = [
     "import-untyped",
     "return",
