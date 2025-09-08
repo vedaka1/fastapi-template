@@ -1,7 +1,6 @@
 from functools import lru_cache
 from typing import Annotated, AsyncIterable
 
-from config import PostgresqlConfig
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -9,6 +8,8 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+
+from config import PostgresqlConfig
 from src.infrastructure.di.stub import Stub
 
 

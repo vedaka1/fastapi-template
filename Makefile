@@ -12,4 +12,4 @@ down:
 	$(DC) -f $(DEV) down
 
 logs:
-	$(DC) -f $(DEV) -f $(PROD) logs | tail -50
+	$(DC) -f $(DEV)  logs | tail -50
